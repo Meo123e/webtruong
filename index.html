@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuyển sinh Lớp 10 | GDNN-GDTX Vân Đồn</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#1E3A8A', secondary: '#F59E0B', student: '#3B82F6' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Montserrat', 'sans-serif'] },
+                    animation: {
+                        'ripple': 'ripple 1.5s linear infinite',
+                    },
+                    keyframes: {
+                        ripple: {
+                            '0%': { boxShadow: '0 0 0 0 rgba(59, 130, 246, 0.5)' },
+                            '70%': { boxShadow: '0 0 0 15px rgba(59, 130, 246, 0)' },
+                            '100%': { boxShadow: '0 0 0 0 rgba(59, 130, 246, 0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ĐÃ CẬP NHẬT ẢNH NỀN VÀ LỚP PHỦ TẠI ĐÂY */
+        .hero-student {
+            background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.75), rgba(30, 58, 138, 0.65)), url('https://lh3.googleusercontent.com/p/AF1QipN38j4VbFk3VwG4X1s49y4Q70_f_08660-84_g=s1360-w1360-h1020');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .section-background-light {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%);
+        }
+
+        .section-background-accent {
+            background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+        }
+
+        .card-gradient-hover {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-gradient-hover:hover {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
+        }
+
+        header nav a {
+            position: relative;
+        }
+
+        header nav a.nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background-color: #1E3A8A;
+            transition: all 0.3s ease-in-out;
+            transform: translateX(-50%);
+        }
+
+        header nav a.nav-link:hover::after {
+            width: 100%;
+        }
+
+        #mobile-menu {
+            transition: all 0.4s ease-in-out;
+            transform-origin: top;
+        }
+
+        #mobile-menu.hidden {
+            opacity: 0;
+            transform: scaleY(0);
+            pointer-events: none;
+        }
+
+        #mobile-menu:not(.hidden) {
+            opacity: 1;
+            transform: scaleY(1);
+            pointer-events: auto;
+        }
+
+        details>summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details>summary i {
+            transition: transform 0.3s ease;
+        }
+
+        details[open]>summary i {
+            transform: rotate(180deg);
+        }
+
+        #backToTop {
+            transition: all 0.3s ease-in-out;
+        }
+
+        #backToTop.opacity-0 {
+            pointer-events: none;
+        }
+
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-content {
+            transition: transform 0.3s ease;
+            transform: scale(0.95);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800 relative">
+
+    <header class="fixed w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-primary p-2 rounded-lg text-white">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-extrabold text-lg text-primary leading-none uppercase">GDNN-GDTX</h1>
+                    <p class="text-xs font-bold text-secondary tracking-widest uppercase">Vân Đồn</p>
+                </div>
+            </div>
+
+            <nav class="hidden lg:flex space-x-6 font-medium items-center">
+                <a href="#lo-trinh" class="nav-link text-gray-600 hover:text-primary transition duration-300">Lộ
+                    trình</a>
+                <a href="#nganh-hoc" class="nav-link text-gray-600 hover:text-primary transition duration-300">Ngành
+                    học</a>
+                <a href="#hoat-dong" class="nav-link text-gray-600 hover:text-primary transition duration-300">Hoạt
+                    động</a>
+                <a href="#faq" class="nav-link text-gray-600 hover:text-primary transition duration-300">Hỏi đáp</a>
+                <button onclick="toggleModal('loginModal')" id="loginBtn"
+                    class="text-primary font-bold hover:text-blue-800 transition"><i
+                        class="fa-solid fa-circle-user mr-1"></i> Đăng nhập</button>
+                <a href="#contact"
+                    class="bg-primary text-white px-5 py-2 rounded-full hover:bg-blue-800 transition duration-300 hover:scale-105 transform">Tuyển
+                    sinh 10</a>
+            </nav>
+
+            <button id="mobile-menu-btn"
+                class="lg:hidden text-primary text-2xl focus:outline-none flex items-center justify-center w-10 h-10 transition duration-300 transform active:scale-95">
+                <i class="fa-solid fa-bars transition duration-300"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu"
+            class="hidden lg:hidden bg-white shadow-lg border-t border-gray-100 w-full absolute left-0 top-20 flex flex-col z-40">
+            <a href="#lo-trinh" class="px-6 py-4 border-b border-gray-50 hover:bg-gray-50 font-medium">Lộ trình</a>
+            <a href="#nganh-hoc" class="px-6 py-4 border-b border-gray-50 hover:bg-gray-50 font-medium">Ngành học</a>
+            <a href="#hoat-dong" class="px-6 py-4 border-b border-gray-50 hover:bg-gray-50 font-medium">Hoạt động</a>
+            <button onclick="toggleModal('loginModal')"
+                class="px-6 py-4 border-b border-gray-50 hover:bg-gray-50 font-medium text-left text-primary"><i
+                    class="fa-solid fa-circle-user mr-2"></i> Đăng nhập</button>
+            <a href="#contact" class="px-6 py-4 bg-primary text-white font-medium text-center">Tuyển sinh lớp 10</a>
+        </div>
+    </header>
+
+    <div class="fixed bottom-6 left-6 z-40 flex flex-col gap-4">
+        <a href="tel:02033991960"
+            class="w-12 h-12 bg-secondary text-white rounded-full flex items-center justify-center text-xl shadow-lg hover:scale-110 transition transform"
+            title="Gọi điện ngay">
+            <i class="fa-solid fa-phone animate-pulse"></i>
+        </a>
+        <a href="https://zalo.me/0123456789" target="_blank"
+            class="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center text-xl shadow-lg hover:scale-110 transition transform animate-ripple"
+            title="Chat Zalo">
+            <i class="fa-solid fa-comment-dots"></i>
+        </a>
+    </div>
+
+    <section class="hero-student min-h-[85vh] flex items-center pt-20">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+            <div class="text-white" data-aos="fade-up" data-aos-duration="1000">
+                <span
+                    class="bg-secondary px-4 py-1 rounded-full text-sm font-bold uppercase mb-4 inline-block shadow-lg">Hệ
+                    GDTX cấp THPT & Nghề</span>
+                <h2 class="text-4xl md:text-6xl font-heading font-extrabold mb-6 leading-tight">
+                    Khởi đầu cấp 3 <br> <span class="text-secondary">Vững bước tương lai</span>
+                </h2>
+                <p class="text-lg mb-8 text-gray-100 leading-relaxed max-w-lg">
+                    Môi trường học tập năng động dành cho học sinh tốt nghiệp lớp 9. Hoàn thành 3 năm học - Nhận bằng
+                    Tốt nghiệp THPT và Bằng Trung cấp Nghề.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#contact"
+                        class="bg-white text-primary font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-gray-100 transition duration-300 hover:scale-105 transform">Đăng
+                        ký xét tuyển</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section
+        class="py-12 bg-gradient-to-r from-primary via-blue-700 to-primary text-white border-b-4 border-secondary relative z-20 shadow-2xl">
+        <div class="absolute inset-0 opacity-10"
+            style="background-image: radial-gradient(circle at 20% 50%, white 0%, transparent 50%), radial-gradient(circle at 80% 80%, white 0%, transparent 50%); pointer-events: none;">
+        </div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center" id="counter-section">
+                <div data-aos="fade-up" data-aos-delay="0">
+                    <div class="text-4xl md:text-5xl font-heading font-bold text-secondary mb-2"><span class="counter"
+                            data-target="20">0</span>+</div>
+                    <p class="text-sm text-blue-100 font-medium uppercase tracking-wider">Năm kinh nghiệm</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-4xl md:text-5xl font-heading font-bold text-secondary mb-2"><span class="counter"
+                            data-target="1500">0</span>+</div>
+                    <p class="text-sm text-blue-100 font-medium uppercase tracking-wider">Học sinh đã TN</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-4xl md:text-5xl font-heading font-bold text-secondary mb-2"><span class="counter"
+                            data-target="100">0</span>%</div>
+                    <p class="text-sm text-blue-100 font-medium uppercase tracking-wider">Miễn học phí nghề</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-4xl md:text-5xl font-heading font-bold text-secondary mb-2"><span class="counter"
+                            data-target="95">0</span>%</div>
+                    <p class="text-sm text-blue-100 font-medium uppercase tracking-wider">Có việc làm ngay</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="lo-trinh" class="py-20 bg-gradient-to-b from-white via-blue-50 to-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-primary mb-4">Lộ trình học tập "3 năm -
+                    2 bằng"</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto">Giúp học sinh cấp 3 rút ngắn thời gian, sớm có nghề nghiệp
+                    tại Đặc khu Vân Đồn.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 relative z-10">
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-blue-50 -z-10 transform -translate-y-1/2"
+                    data-aos="fade-right" data-aos-delay="200"></div>
+
+                <div class="bg-gradient-to-br from-white to-blue-50 border-2 border-gray-100 p-8 rounded-2xl shadow-md text-center hover:shadow-2xl transition duration-300 group hover:-translate-y-2 transform"
+                    data-aos="zoom-in" data-aos-delay="100">
+                    <div
+                        class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold mx-auto mb-6 group-hover:scale-110 transition">
+                        10</div>
+                    <h3 class="font-bold text-xl mb-3">Lớp 10: Nền tảng</h3>
+                    <p class="text-sm text-gray-500">Học 7 môn văn hóa THPT và làm quen với định hướng nghề nghiệp.</p>
+                </div>
+                <div class="bg-gradient-to-br from-primary to-blue-800 text-white p-8 rounded-2xl shadow-2xl text-center md:-translate-y-4 hover:shadow-2xl transition duration-300 group hover:-translate-y-6 transform relative overflow-hidden"
+                    data-aos="zoom-in" data-aos-delay="300">
+                    <div class="absolute inset-0 opacity-10"
+                        style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2230%22 cy=%2230%22 r=%2220%22 fill=%22white%22/><circle cx=%2270%22 cy=%2270%22 r=%2220%22 fill=%22white%22/></svg>'); background-size: 50px 50px;\">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-secondary text-primary rounded-full flex items-center justify-center font-bold mx-auto mb-6 group-hover:scale-110 transition">
+                            11</div>
+                        <h3 class="font-bold text-xl mb-3 text-white">Lớp 11: Thực hành</h3>
+                        <p class="text-sm text-blue-100">70% thời gian thực hành nghề chuyên sâu tại các xưởng và phòng
+                            mô phỏng.</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-white to-blue-50 border-2 border-gray-100 p-8 rounded-2xl shadow-md text-center hover:shadow-2xl transition duration-300 group hover:-translate-y-2 transform"
+                    data-aos="zoom-in" data-aos-delay="500">
+                    <div
+                        class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold mx-auto mb-6 group-hover:scale-110 transition">
+                        12</div>
+                    <h3 class="font-bold text-xl mb-3">Lớp 12: Về đích</h3>
+                    <p class="text-sm text-gray-500">Thi Tốt nghiệp THPT Quốc gia và nhận bằng Trung cấp Nghề chính quy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cach-lop" class="py-20 bg-gradient-to-b from-blue-50 via-white to-blue-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-primary mb-4">Các lớp học hiện có</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto">Trường hiện có 9 lớp học đầy đủ cho các khối 10, 11 và 12, mỗi lớp được tổ chức theo nhóm học tập phù hợp.</p>
+            </div>
+
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="bg-white p-8 rounded-3xl shadow-md border border-gray-100 hover:shadow-2xl transition duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="font-bold text-2xl mb-4 text-primary">Khối 10</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-primary text-white rounded-full flex items-center justify-center">10A1</span> Lớp 10A1</li>
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-primary text-white rounded-full flex items-center justify-center">10A2</span> Lớp 10A2</li>
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-primary text-white rounded-full flex items-center justify-center">10A3</span> Lớp 10A3</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-md border border-gray-100 hover:shadow-2xl transition duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="font-bold text-2xl mb-4 text-secondary">Khối 11</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-secondary text-primary rounded-full flex items-center justify-center">11A1</span> Lớp 11A1</li>
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-secondary text-primary rounded-full flex items-center justify-center">11A2</span> Lớp 11A2</li>
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-secondary text-primary rounded-full flex items-center justify-center">11A3</span> Lớp 11A3</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-md border border-gray-100 hover:shadow-2xl transition duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="font-bold text-2xl mb-4 text-student">Khối 12</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-student text-white rounded-full flex items-center justify-center">12A1</span> Lớp 12A1</li>
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-student text-white rounded-full flex items-center justify-center">12A2</span> Lớp 12A2</li>
+                        <li class="flex items-center gap-3"><span class="w-9 h-9 bg-student text-white rounded-full flex items-center justify-center">12A3</span> Lớp 12A3</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="nganh-hoc" class="py-20 bg-gradient-to-b from-gray-50 via-blue-50 to-gray-50 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-heading font-extrabold text-primary mb-12 text-center" data-aos="fade-up">Các ngành
+                nghề "Hot" tại Vân Đồn</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-gradient-to-br from-white to-blue-50 p-6 rounded-2xl shadow-sm hover:shadow-2xl hover:from-primary hover:to-blue-700 hover:text-white transition duration-300 group text-center hover:-translate-y-2 transform border border-gray-100 hover:border-blue-500"
+                    data-aos="fade-up" data-aos-delay="100">
+                    <i
+                        class="fa-solid fa-bell-concierge text-4xl text-secondary mb-4 transition duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:text-yellow-300"></i>
+                    <h4 class="font-bold">Lễ tân - Khách sạn</h4>
+                </div>
+                <div class="bg-gradient-to-br from-white to-blue-50 p-6 rounded-2xl shadow-sm hover:shadow-2xl hover:from-primary hover:to-blue-700 hover:text-white transition duration-300 group text-center hover:-translate-y-2 transform border border-gray-100 hover:border-blue-500"
+                    data-aos="fade-up" data-aos-delay="200">
+                    <i
+                        class="fa-solid fa-utensils text-4xl text-secondary mb-4 transition duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:text-yellow-300"></i>
+                    <h4 class="font-bold">Nấu ăn</h4>
+                </div>
+                <div class="bg-gradient-to-br from-white to-blue-50 p-6 rounded-2xl shadow-sm hover:shadow-2xl hover:from-primary hover:to-blue-700 hover:text-white transition duration-300 group text-center hover:-translate-y-2 transform border border-gray-100 hover:border-blue-500"
+                    data-aos="fade-up" data-aos-delay="300">
+                    <i
+                        class="fa-solid fa-microchip text-4xl text-secondary mb-4 transition duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:text-yellow-300"></i>
+                    <h4 class="font-bold">Điện - Điện tử</h4>
+                </div>
+                <div class="bg-gradient-to-br from-white to-blue-50 p-6 rounded-2xl shadow-sm hover:shadow-2xl hover:from-primary hover:to-blue-700 hover:text-white transition duration-300 group text-center hover:-translate-y-2 transform border border-gray-100 hover:border-blue-500"
+                    data-aos="fade-up" data-aos-delay="400">
+                    <i
+                        class="fa-solid fa-language text-4xl text-secondary mb-4 transition duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:text-yellow-300"></i>
+                    <h4 class="font-bold">Tiếng Trung</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="hoat-dong" class="py-20 bg-gradient-to-b from-white via-slate-50 to-white relative"
+        style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 120%22><path d=%22M0,50 Q300,10 600,50 T1200,50 L1200,120 L0,120 Z%22 fill=%22%23f0f9ff%22 opacity=%220.3%22/></svg>'); background-position: top; background-repeat: no-repeat; background-size: cover;">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-end mb-12">
+                <h2 class="text-3xl font-heading font-extrabold text-primary" data-aos="fade-right">Hoạt động nổi bật
+                </h2>
+                <a href="#" class="text-secondary font-bold hover:text-yellow-600 hidden md:block"
+                    data-aos="fade-left">Xem tất cả <i class="fa-solid fa-arrow-right ml-1"></i></a>
+            </div>
+
+            <div id="activitiesContainer" class="grid md:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-gray-100"
+            data-aos="zoom-in">
+            <div
+                class="bg-gradient-to-br from-gray-900 via-blue-900 to-slate-900 p-12 text-white md:w-2/5 flex flex-col justify-center relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10"
+                    style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22white%22/></svg>'); background-size: 80px 80px;">
+                </div>
+                <div class="relative z-10">
+                    <h3 class="font-heading text-2xl font-bold mb-6">Xét tuyển Lớp 10</h3>
+                    <p class="text-gray-300 text-sm mb-8 italic">Phụ huynh đăng ký sớm để được giữ chỗ và chọn ngành học
+                        phù hợp.</p>
+                    <div class="space-y-4">
+                        <!-- Đã update số điện thoại thật trên biển trường -->
+                        <p><i class="fa-solid fa-phone mr-2 text-secondary"></i> 0203 3991 960</p>
+                        <p><i class="fa-solid fa-envelope mr-2 text-secondary"></i> info@gdtxvandon.edu.vn</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-12 md:w-3/5 bg-gradient-to-br from-blue-50 to-white">
+                <form id="enrollmentForm" onsubmit="handleEnrollmentSubmit(event)" class="space-y-5">
+                    <input type="text" id="enrollName" required placeholder="Họ và tên học sinh"
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition duration-300 hover:scale-[1.01]">
+                    <input type="tel" id="enrollPhone" required pattern="[0-9]{10,11}"
+                        placeholder="Số điện thoại phụ huynh"
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition duration-300 hover:scale-[1.01]">
+                    <select id="enrollMajor" required
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition duration-300 cursor-pointer hover:scale-[1.01]">
+                        <option value="" disabled selected>-- Chọn ngành dự kiến --</option>
+                        <option>Du lịch - Nhà hàng - Khách sạn</option>
+                        <option>Công nghệ thông tin</option>
+                        <option>Điện - Điện tử</option>
+                        <option>Tiếng Trung giao tiếp</option>
+                    </select>
+                    <button type="submit" id="submitBtn"
+                        class="w-full bg-secondary text-primary font-bold py-4 rounded-xl shadow-lg hover:bg-yellow-500 transition uppercase tracking-widest hover:scale-[1.02] transform flex justify-center items-center gap-2">
+                        <span>Gửi hồ sơ ngay</span>
+                        <i class="fa-solid fa-paper-plane hidden" id="loadingIcon"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer
+        class="bg-gradient-to-r from-slate-900 via-gray-800 to-slate-900 py-12 border-t border-gray-700 text-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5"
+            style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 60 60%22><circle cx=%2230%22 cy=%2230%22 r=%2220%22 fill=%22white%22/></svg>'); background-size: 60px 60px;">
+        </div>
+        <div class="relative z-10">
+            <!-- Đã update địa chỉ dựa vào ảnh biển trường -->
+            <div class="text-gray-300 text-sm mb-3"><i class="fa-solid fa-location-dot text-secondary mr-1"></i> Thôn 8, xã Hạ Long, huyện Vân Đồn, tỉnh Quảng Ninh</div>
+            <div class="text-gray-400 text-xs uppercase tracking-widest">&copy; 2024 TRUNG TÂM GDNN-GDTX VÂN ĐỒN</div>
+        </div>
+    </footer>
+
+    <button id="backToTop"
+        class="fixed bottom-6 right-20 bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-xl transition-all duration-300 opacity-0 invisible hover:bg-blue-800 z-40 transform hover:scale-110">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <div id="loginModal"
+        class="modal fixed inset-0 z-[100] flex items-center justify-center bg-black/50 opacity-0 invisible backdrop-blur-sm">
+        <div class="modal-content bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl relative">
+            <button onclick="toggleModal('loginModal')"
+                class="absolute top-4 right-5 text-gray-400 hover:text-gray-800 text-2xl"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <div class="text-center mb-8">
+                <div
+                    class="bg-primary w-12 h-12 rounded-full text-white flex items-center justify-center text-xl mx-auto mb-3">
+                    <i class="fa-solid fa-user-lock"></i></div>
+                <h3 class="text-2xl font-heading font-bold text-primary">Đăng nhập Admin</h3>
+                <p class="text-sm text-gray-500 mt-1">Gợi ý: user <b>admin</b> - pass <b>123456</b></p>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="text" id="username" required
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                    placeholder="Tài khoản">
+                <input type="password" id="password" required
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                    placeholder="Mật khẩu">
+                <div id="loginError" class="hidden text-red-500 text-sm text-center font-medium">Sai tài khoản hoặc mật
+                    khẩu!</div>
+                <button type="submit"
+                    class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow hover:bg-blue-800 transition">Đăng
+                    nhập</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <div id="successModal"
+        class="modal fixed inset-0 z-[100] flex items-center justify-center bg-black/50 opacity-0 invisible backdrop-blur-sm">
+        <div class="modal-content bg-white w-full max-w-sm p-8 rounded-3xl shadow-2xl relative text-center">
+            <div
+                class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-5">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="text-2xl font-heading font-bold text-gray-800 mb-2">Gửi thành công!</h3>
+            <p class="text-gray-500 text-sm mb-6">Cảm ơn phụ huynh đã đăng ký. Nhà trường sẽ liên hệ lại qua số điện
+                thoại trong thời gian sớm nhất.</p>
+            <button onclick="toggleModal('successModal')"
+                class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow hover:bg-blue-800 transition">Đóng
+                thông báo</button>
+        </div>
+    </div>
+
+    <!-- Modal Chi tiết hoạt động -->
+    <div id="activityDetailModal"
+        class="modal fixed inset-0 z-[110] flex items-center justify-center bg-black/60 opacity-0 invisible backdrop-blur-sm p-4">
+        <div
+            class="modal-content bg-white w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl relative overflow-hidden">
+            <button onclick="toggleModal('activityDetailModal')"
+                class="absolute top-4 right-5 text-gray-800 bg-white/80 hover:bg-white rounded-full w-8 h-8 flex items-center justify-center text-xl z-10 shadow transition"><i
+                    class="fa-solid fa-xmark"></i></button>
+
+            <div class="overflow-y-auto flex-1 p-0">
+                <img id="detailImage" src="" class="w-full h-64 sm:h-80 object-cover" alt="Cover">
+                <div class="p-6 sm:p-10">
+                    <span class="text-xs font-bold text-primary bg-blue-50 px-3 py-1 rounded-full mb-4 inline-block">Tin
+                        tức hoạt động</span>
+                    <h3 id="detailTitle" class="text-2xl sm:text-3xl font-heading font-bold text-gray-800 mb-4"></h3>
+                    <p id="detailDesc" class="text-gray-600 font-medium mb-6 italic border-l-4 border-secondary pl-4">
+                    </p>
+                    <div id="detailContent" class="text-gray-700 space-y-4 leading-relaxed whitespace-pre-line mb-8">
+                    </div>
+                    <div id="detailLinkContainer" class="hidden border-t pt-6 mt-6">
+                        <a id="detailLink" href="#" target="_blank"
+                            class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium px-5 py-2.5 rounded-xl transition">
+                            <i class="fa-solid fa-link"></i> Xem bài viết gốc
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // --- Logic Đóng mở Modal ---
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.toggle('active');
+            modal.classList.toggle('opacity-0');
+            modal.classList.toggle('invisible');
+        }
+
+        // --- Logic Nút Back To Top ---
+        const backToTopButton = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        backToTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // --- TÍNH NĂNG MỚI: Xử lý Form Gửi thành công ---
+        function handleEnrollmentSubmit(e) {
+            e.preventDefault(); // Chặn hành vi tải lại trang
+            const form = document.getElementById('enrollmentForm');
+            const btn = document.getElementById('submitBtn');
+            const icon = document.getElementById('loadingIcon');
+
+            // Hiệu ứng đang gửi
+            btn.querySelector('span').innerText = "Đang gửi...";
+            icon.classList.remove('hidden');
+            icon.classList.add('fa-spinner', 'animate-spin');
+            icon.classList.remove('fa-paper-plane');
+
+            // Lưu dữ liệu đăng ký vào LocalStorage
+            const name = document.getElementById('enrollName').value;
+            const phone = document.getElementById('enrollPhone').value;
+            const major = document.getElementById('enrollMajor').value;
+            const enrollments = JSON.parse(localStorage.getItem('enrollments') || '[]');
+            enrollments.push({ name, phone, major, date: new Date().toLocaleString('vi-VN') });
+            localStorage.setItem('enrollments', JSON.stringify(enrollments));
+
+            // Giả lập thời gian gửi dữ liệu (1.5 giây)
+            setTimeout(() => {
+                // Khôi phục nút
+                btn.querySelector('span').innerText = "Gửi hồ sơ ngay";
+                icon.classList.add('hidden');
+
+                // Mở bảng thông báo thành công
+                toggleModal('successModal');
+
+                // Xóa trắng form
+                form.reset();
+            }, 1500);
+        }
+
+        // --- TÍNH NĂNG MỚI: Hiệu ứng Đếm Số (Counter) ---
+        const counters = document.querySelectorAll('.counter');
+        let hasCounted = false;
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !hasCounted) {
+                hasCounted = true;
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        // Chia nhỏ để chạy mượt, số càng lớn chạy càng nhanh
+                        const inc = target / 50;
+
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + inc);
+                            setTimeout(updateCount, 30);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCount();
+                });
+            }
+        }, { threshold: 0.5 }); // Kích hoạt khi cuộn thấy 50% khu vực thống kê
+
+        counterObserver.observe(document.getElementById('counter-section'));
+
+        // --- Logic Admin Mockup (Giữ nguyên) ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const err = document.getElementById('loginError');
+            if (user === 'admin' && pass === '123456') {
+                err.classList.add('hidden');
+                sessionStorage.setItem('isAdmin', 'true'); // Cấp quyền session
+                window.location.href = 'admin.html'; // Chuyển sang trang riêng
+            } else {
+                err.classList.remove('hidden');
+            }
+        }
+
+        // --- TÍNH NĂNG MỚI: Quản lý hoạt động với LocalStorage ---
+        function createActivityCard(act, index) {
+            return `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group border-2 border-green-200 flex flex-col" data-aos="fade-up">
+                    <div class="h-48 overflow-hidden relative">
+                        <span class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded shadow z-10">Mới thêm</span>
+                        <img src="${act.image}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Hoạt động">
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <span class="text-xs font-bold text-primary bg-blue-50 px-3 py-1 rounded-full mb-3 inline-block self-start">Tin mới</span>
+                        <h3 class="font-bold text-xl mb-2 group-hover:text-primary transition">${act.title}</h3>
+                        <p class="text-gray-500 text-sm line-clamp-2 flex-1">${act.desc}</p>
+                        <button onclick="showActivityDetails(${index})" class="mt-4 text-sm font-bold text-primary hover:text-secondary transition flex items-center gap-1">
+                            Xem chi tiết <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadActivities() {
+            const activities = JSON.parse(localStorage.getItem('schoolActivities') || '[]');
+            const container = document.getElementById('activitiesContainer');
+            container.innerHTML = '';
+
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <div class="md:col-span-3 col-span-full bg-white rounded-3xl shadow-sm border border-gray-100 p-10 text-center text-gray-500 italic">
+                        Chưa có bài viết mới. Quản trị viên có thể thêm bài viết từ trang quản trị.
+                    </div>
+                `;
+                return;
+            }
+
+            activities.forEach((act, index) => {
+                container.insertAdjacentHTML('afterbegin', createActivityCard(act, index));
+            });
+        }
+
+        // --- TÍNH NĂNG MỚI: Hiển thị chi tiết hoạt động ---
+        function showActivityDetails(index) {
+            const activities = JSON.parse(localStorage.getItem('schoolActivities') || '[]');
+            const act = activities[index];
+            if (!act) return;
+
+            document.getElementById('detailImage').src = act.image;
+            document.getElementById('detailTitle').innerText = act.title;
+            document.getElementById('detailDesc').innerText = act.desc;
+            document.getElementById('detailContent').innerText = act.content || 'Đang cập nhật nội dung chi tiết...';
+
+            const linkContainer = document.getElementById('detailLinkContainer');
+            if (act.originalLink) {
+                linkContainer.classList.remove('hidden');
+                document.getElementById('detailLink').href = act.originalLink;
+            } else {
+                linkContainer.classList.add('hidden');
+            }
+
+            toggleModal('activityDetailModal');
+        }
+
+        // Tải danh sách hoạt động khi trang khởi tạo
+        document.addEventListener('DOMContentLoaded', loadActivities);
+
+        // --- Mobile Menu Toggle ---
+        const btn = document.getElementById('mobile-menu-btn');
+        const icon = btn.querySelector('i');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            });
+        });
+    </script>
+</body>
+
+</html>

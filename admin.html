@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị | GDNN-GDTX Vân Đồn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#1E3A8A', secondary: '#F59E0B' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], heading: ['Montserrat', 'sans-serif'] }
+                }
+            }
+        }
+        
+        // Xác thực quyền (nếu không có session đăng nhập thì đuổi về trang chủ)
+        if (!sessionStorage.getItem('isAdmin')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-primary text-white flex-col hidden md:flex">
+        <div class="p-6 border-b border-blue-800">
+            <h2 class="text-2xl font-heading font-bold">Admin Panel</h2>
+            <p class="text-blue-300 text-sm">GDNN-GDTX Vân Đồn</p>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <button onclick="switchTab('enrollments')" id="tab-enrollments" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-800 text-white transition font-medium">
+                <i class="fa-solid fa-users"></i> Quản lý Đăng ký
+            </button>
+            <button onclick="switchTab('activities')" id="tab-activities" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-800 text-blue-100 transition font-medium">
+                <i class="fa-solid fa-newspaper"></i> Quản lý Bài đăng
+            </button>
+        </nav>
+        <div class="p-4 border-t border-blue-800">
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-600 text-white transition font-medium">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        
+        <!-- Mobile Header -->
+        <header class="bg-white shadow-sm p-4 md:hidden flex justify-between items-center">
+            <h2 class="text-xl font-heading font-bold text-primary">Admin Panel</h2>
+            <button onclick="logout()" class="text-red-500 text-xl"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </header>
+        
+        <!-- Mobile Tabs -->
+        <div class="md:hidden flex bg-white border-b sticky top-0 z-10">
+            <button onclick="switchTab('enrollments')" id="mobile-tab-enrollments" class="flex-1 py-3 text-primary border-b-2 border-primary font-medium">Đăng ký</button>
+            <button onclick="switchTab('activities')" id="mobile-tab-activities" class="flex-1 py-3 text-gray-500 font-medium border-b-2 border-transparent">Bài đăng</button>
+        </div>
+
+        <div class="p-4 md:p-10 flex-1">
+            
+            <!-- TABS 1: Quản lý Đăng ký -->
+            <div id="section-enrollments" class="space-y-6">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-heading font-bold text-gray-800">Danh sách đăng ký</h1>
+                        <p class="text-gray-500 mt-1 text-sm md:text-base">Học sinh đăng ký xét tuyển lớp 10</p>
+                    </div>
+                    <button onclick="clearEnrollments()" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition whitespace-nowrap">
+                        <i class="fa-solid fa-trash mr-1"></i> Xóa tất cả
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-100">
+                                    <th class="p-4 font-semibold text-gray-600">Thời gian</th>
+                                    <th class="p-4 font-semibold text-gray-600">Họ và tên</th>
+                                    <th class="p-4 font-semibold text-gray-600">Số điện thoại</th>
+                                    <th class="p-4 font-semibold text-gray-600">Ngành dự kiến</th>
+                                </tr>
+                            </thead>
+                            <tbody id="enrollmentTableBody" class="divide-y divide-gray-100">
+                                <!-- Dữ liệu sẽ được load qua Javascript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABS 2: Quản lý Hoạt động -->
+            <div id="section-activities" class="hidden space-y-6">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-heading font-bold text-gray-800">Quản lý bài đăng</h1>
+                    <p class="text-gray-500 mt-1 text-sm md:text-base">Thêm và lưu trữ bài viết hiển thị trên trang chủ</p>
+                </div>
+
+                <!-- Form thêm bài viết -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold mb-4 text-primary">Thêm bài viết mới</h3>
+                    <form id="addActivityForm" onsubmit="handleAddActivity(event)" class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề bài viết <span class="text-red-500">*</span></label>
+                                <input type="text" id="actTitle" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary focus:bg-white" placeholder="Ví dụ: Hội thao cấp trường...">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Ảnh đại diện (Chọn từ máy) <span class="text-red-500">*</span></label>
+                                <input type="file" id="actImageFile" accept="image/*" required class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary focus:bg-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn <span class="text-red-500">*</span></label>
+                            <textarea id="actDesc" rows="2" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary focus:bg-white" placeholder="Nội dung mô tả ngắn gọn..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nội dung chi tiết (Tùy chọn)</label>
+                            <textarea id="actContent" rows="4" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary focus:bg-white" placeholder="Viết chi tiết về bài đăng..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Đường liên kết gốc (Tùy chọn)</label>
+                            <input type="url" id="actOriginalLink" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary focus:bg-white" placeholder="https://facebook.com/... hoặc link bài viết gốc">
+                        </div>
+                        <div class="text-right pt-2">
+                            <button type="submit" class="w-full md:w-auto bg-secondary text-primary font-bold px-8 py-3 rounded-xl shadow hover:bg-yellow-500 transition">Đăng bài lên trang chủ</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Danh sách bài đã đăng -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-bold mb-4 text-primary">Các bài viết đã đăng</h3>
+                    <div id="adminActivitiesContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Bài viết sẽ load qua Javascript -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- Chuyển đổi qua lại giữa 2 Tab ---
+        function switchTab(tabId) {
+            document.getElementById('section-enrollments').classList.add('hidden');
+            document.getElementById('section-activities').classList.add('hidden');
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+
+            // Cập nhật CSS menu Desktop
+            document.getElementById('tab-enrollments').className = 'w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-800 text-blue-100 transition font-medium';
+            document.getElementById('tab-activities').className = 'w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-800 text-blue-100 transition font-medium';
+            document.getElementById(`tab-${tabId}`).className = 'w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-800 text-white transition font-medium';
+
+            // Cập nhật CSS menu Mobile
+            const mobEnroll = document.getElementById('mobile-tab-enrollments');
+            const mobAct = document.getElementById('mobile-tab-activities');
+            if(mobEnroll && mobAct) {
+                mobEnroll.className = 'flex-1 py-3 text-gray-500 font-medium border-b-2 border-transparent';
+                mobAct.className = 'flex-1 py-3 text-gray-500 font-medium border-b-2 border-transparent';
+                document.getElementById(`mobile-tab-${tabId}`).className = 'flex-1 py-3 text-primary border-b-2 border-primary font-medium';
+            }
+        }
+
+        // --- Đăng xuất ---
+        function logout() {
+            sessionStorage.removeItem('isAdmin');
+            window.location.href = 'index.html';
+        }
+
+        // --- Chức năng: ĐĂNG KÝ ---
+        function loadEnrollments() {
+            const enrollments = JSON.parse(localStorage.getItem('enrollments') || '[]');
+            const tbody = document.getElementById('enrollmentTableBody');
+            if (enrollments.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-gray-500 italic">Chưa có ai đăng ký. Dữ liệu sẽ xuất hiện khi có người gửi form từ trang chủ.</td></tr>`;
+                return;
+            }
+            const sortedEnrollments = [...enrollments].reverse(); // Đảo ngược để hiện mới nhất trước
+            tbody.innerHTML = sortedEnrollments.map(en => `
+                <tr class="hover:bg-gray-50 transition border-b border-gray-50 last:border-0">
+                    <td class="p-4 text-sm text-gray-500 whitespace-nowrap">${en.date}</td>
+                    <td class="p-4 font-medium text-gray-800 whitespace-nowrap">${en.name}</td>
+                    <td class="p-4 text-primary font-medium whitespace-nowrap"><a href="tel:${en.phone}">${en.phone}</a></td>
+                    <td class="p-4 text-sm"><span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium whitespace-nowrap">${en.major}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function clearEnrollments() {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ danh sách đăng ký? Hành động này KHÔNG THỂ khôi phục.")) {
+                localStorage.removeItem('enrollments');
+                loadEnrollments();
+            }
+        }
+
+        // --- Chức năng: HOẠT ĐỘNG ---
+        function loadAdminActivities() {
+            const activities = JSON.parse(localStorage.getItem('schoolActivities') || '[]');
+            const container = document.getElementById('adminActivitiesContainer');
+            if (activities.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-gray-500 italic">Chưa có bài viết nào do Admin thêm.</p>`;
+                return;
+            }
+            const reversedActivities = [...activities].reverse();
+            container.innerHTML = reversedActivities.map((act, idx) => {
+                const originalIndex = activities.length - 1 - idx; // Cần index gốc để xóa đúng phần tử
+                return `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col group hover:shadow-md transition">
+                    <img src="${act.image}" class="h-40 w-full object-cover group-hover:scale-105 transition duration-500" alt="Cover">
+                    <div class="p-5 flex-1 flex flex-col">
+                        <h4 class="font-bold text-gray-800 mb-2 line-clamp-2">${act.title}</h4>
+                        <p class="text-sm text-gray-500 line-clamp-2 mb-5 flex-1">${act.desc}</p>
+                        <button onclick="deleteActivity(${originalIndex})" class="w-full bg-red-50 text-red-600 font-bold py-2.5 rounded-xl hover:bg-red-100 transition text-sm flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-trash-can"></i> Xóa bài viết
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function handleAddActivity(e) {
+            e.preventDefault();
+            const title = document.getElementById('actTitle').value;
+            const desc = document.getElementById('actDesc').value;
+            const content = document.getElementById('actContent').value;
+            const originalLink = document.getElementById('actOriginalLink').value;
+            const fileInput = document.getElementById('actImageFile');
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("Vui lòng chọn một ảnh từ máy tính!");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                const imageBase64 = event.target.result;
+                const activities = JSON.parse(localStorage.getItem('schoolActivities') || '[]');
+                activities.push({ title, image: imageBase64, desc, content, originalLink });
+                
+                try {
+                    localStorage.setItem('schoolActivities', JSON.stringify(activities));
+                    document.getElementById('addActivityForm').reset();
+                    loadAdminActivities();
+                    alert("✅ Đăng bài thành công! Bài viết đã xuất hiện ở trang chủ.");
+                } catch (err) {
+                    alert("❌ Lỗi: Ảnh quá lớn hoặc bộ nhớ đã đầy. Vui lòng chọn ảnh dung lượng nhỏ hơn (dưới 2MB)!");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteActivity(index) {
+            if(confirm("Bạn muốn xóa bài viết này khỏi trang chủ?")) {
+                const activities = JSON.parse(localStorage.getItem('schoolActivities') || '[]');
+                activities.splice(index, 1);
+                localStorage.setItem('schoolActivities', JSON.stringify(activities));
+                loadAdminActivities();
+            }
+        }
+
+        // --- Khởi chạy khi load trang ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadEnrollments();
+            loadAdminActivities();
+        });
+    </script>
+</body>
+</html>
